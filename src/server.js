@@ -1,9 +1,23 @@
 import { default as express } from "express";
+import { readFile } from "fs/promises";
 
 const app = express();
 const port = 3000;
 
 app.use(express.static("web"));
+
+app.use("/zmones", async (req, res) => {
+    res.setDefaultEncoding("utf8");
+    res.set("Content-Type", "application/json");
+    try {
+       const fZmones = await readFile("zmones.js", {
+        encoding: "utf8"
+        }); 
+        res.send(fZmones);
+    } catch (err) {
+        res.send("[]");
+    }
+});
 
 app.get("/suma", (req, res) => {
     const sk1 = parseFloat(req.query.pirmas);
